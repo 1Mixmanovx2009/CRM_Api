@@ -41,7 +41,6 @@ const Customer = () => {
             )}
       <CreateCS open={open} close={() => setOpen(null)} />
       <Pagination page={page} count={21} onChange={handleChangePage} />
-      <Pagination page={page} count={21} onChange={(_, value) => setPage(value)} />
     </div>
   );
 };
