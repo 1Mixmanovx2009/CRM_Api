@@ -1,6 +1,6 @@
 import CreateCS from "@/components/create-cs/CreateCS";
 import Table from "@/components/table/Table";
-import { Box, Button, CircularProgress, Pagination, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Pagination, Slide, Slider, Typography } from "@mui/material";
 import { useState } from "react";
 import { request } from "@/api";
 import { useQuery } from '@tanstack/react-query'
@@ -9,36 +9,49 @@ import { useQuery } from '@tanstack/react-query'
 const Customer = () => {
   const [open, setOpen] = useState<null | string>(null);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(1);
+
+  const { data, isFetching } = useQuery({
+    queryKey: ["toos", page, limit],
+    queryFn: () => request.get('/get/customers', {
+      params: {
+        skip: page,
+        limit: limit
+      }
+    }).then(res => res)
+  })
+
   const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-
-  const {data, isFetching} = useQuery({
-    queryKey: ["toos", page],
-    queryFn: () => request.get('/get/customers', {
-      params: {
-          skip: page,
-          limit: 10
+  const handleChangeLimit = (_: Event, value: number | number[]) => {
+      if (Array.isArray(value)) {
+        setLimit(value[0]);
+      } else {
+        setLimit(value);
       }
-      }).then(res => res)
-  })
+    };
+
+ 
 
 
   return (
     <div>
+
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Customer
         </Typography>
+        <Slider size="small" style={{width:300}} min={1} max={221} defaultValue={limit} onChange={handleChangeLimit} aria-label="Default" valueLabelDisplay="auto" />        
         <Button onClick={() => setOpen("customer")}>Create</Button>
       </Box>
       {isFetching ? (
-                <Typography><CircularProgress/></Typography>
-            ) : (
-                <Table data={data?.data?.innerData} />
-            )}
+        <Typography><CircularProgress /></Typography>
+      ) : (
+        <Table data={data?.data?.innerData} />
+      )}
       <CreateCS open={open} close={() => setOpen(null)} />
       <Pagination page={page} count={21} onChange={handleChangePage} />
     </div>
