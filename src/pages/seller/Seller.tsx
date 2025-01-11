@@ -21,7 +21,7 @@ const Seller = () => {
   console.log(data?.data?.innerData);
 
 
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 

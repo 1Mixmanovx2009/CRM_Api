@@ -9,6 +9,10 @@ import { useQuery } from '@tanstack/react-query'
 const Customer = () => {
   const [open, setOpen] = useState<null | string>(null);
   const [page, setPage] = useState(1);
+  const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
   const {data, isFetching} = useQuery({
     queryKey: ["toos", page],
     queryFn: () => request.get('/get/customers', {
@@ -18,9 +22,7 @@ const Customer = () => {
       }
       }).then(res => res)
   })
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-};
+
 
   return (
     <div>
@@ -39,7 +41,7 @@ const Customer = () => {
             )}
       <CreateCS open={open} close={() => setOpen(null)} />
       <Pagination page={page} count={21} onChange={handleChangePage} />
-        
+      <Pagination page={page} count={21} onChange={(_, value) => setPage(value)} />
     </div>
   );
 };
