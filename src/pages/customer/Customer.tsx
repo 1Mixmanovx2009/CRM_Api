@@ -1,6 +1,6 @@
 import CreateCS from "@/components/create-cs/CreateCS";
 import Table from "@/components/table/Table";
-import { Box, Button, CircularProgress, Pagination, Slide, Slider, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Pagination, Slider, Typography } from "@mui/material";
 import { useState } from "react";
 import { request } from "@/api";
 import { useQuery } from '@tanstack/react-query'
