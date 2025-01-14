@@ -11,6 +11,8 @@ export interface ICustomer {
     phone_primary:string;
     budget:number;
     address:string;
+    pin:boolean;
+    isPaidToday: boolean;
 }
 
 export interface IProduct {

@@ -37,7 +37,7 @@ const Product = () => {
     return (
         <div>
             <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}
+                sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}   
             >
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Product

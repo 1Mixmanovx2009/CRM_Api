@@ -5,22 +5,20 @@ import { useState } from "react";
 import { request } from "@/api";
 import { useQuery } from '@tanstack/react-query'
 
-
 const Seller = () => {
   const [open, setOpen] = useState<null | string>(null);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(10);
+
   const { data, isFetching } = useQuery({
-    queryKey: ["toos", page, limit ],
+    queryKey: ["seller", page, limit],
     queryFn: () => request.get('/get/sellers', {
       params: {
-        skip: page,
-        limit: limit
+        skip: (page - 1) * limit,
+        limit,
       }
     }).then(res => res)
-  })
-  console.log(data?.data?.innerData);
-
+  });
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -34,26 +32,34 @@ const Seller = () => {
     }
   };
 
-
   return (
     <div>
-      <Box
-        sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}
-      >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Seller
-        </Typography>
-        <Slider size="small" style={{width:300}} min={1} max={221} defaultValue={limit} onChange={handleChangeLimit} aria-label="Default" valueLabelDisplay="auto" />        
-        <Button onClick={() => setOpen("customer")}>Create</Button>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
+        <Typography variant="h6">Seller</Typography>
+        <Slider
+          size="small"
+          style={{ width: 300 }}
+          min={1}
+          max={221}
+          defaultValue={limit}
+          onChange={handleChangeLimit}
+          valueLabelDisplay="auto"
+        />
+        <Button onClick={() => setOpen("seller")}>Create</Button>
       </Box>
-      {isFetching ? (
-        <Typography><CircularProgress /></Typography>
-      ) : (
-        <Table data={data?.data?.innerData} />
-      )}
-      <CreateCS open={open} close={() => setOpen(null)} />
-      <Pagination page={page} count={3} onChange={handleChangePage} />
 
+      {isFetching ? (
+        <CircularProgress />
+      ) : (
+        <Table data={data?.data?.innerData} type="seller" />
+      )}
+
+      <CreateCS open={open} close={() => setOpen(null)} />
+      <Pagination
+        page={page}
+        count={Math.ceil(data?.data?.total / limit)}
+        onChange={handleChangePage}
+      />
     </div>
   );
 };
